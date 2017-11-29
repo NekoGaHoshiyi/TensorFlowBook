@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="1.0">
+    <meta name="author" content="Mobo"/>
+    <meta name="language" content="zh"/>
+    <category>
+        <pattern>拜拜</pattern>
+        <template>下次见～～</template>
+    </category>
+    <category>
+        <pattern>谢谢</pattern>
+        <template>
+            <srai>THANKS</srai>
+        </template>
+    </category>
+    <category>
+        <pattern>谢谢 *</pattern>
+        <template>
+            <srai>THANKS</srai>
+        </template>
+    </category>
+    <category>
+        <pattern>THANKS</pattern>
+        <template>
+            <random>
+                <li>不用谢。</li>
+                <li>这是我应该做的。</li>
+                <li>客气，客气～</li>
+            </random>
+        </template>
+    </category>
+</aiml>

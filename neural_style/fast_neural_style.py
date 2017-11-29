@@ -135,8 +135,7 @@ def total_loss(content_image, style_image, target_image):
     return loss
 
 
-def train(style, contents, image_shape,
-          generator_name="johnson",
+def train(style, contents, image_shape, generator_name="johnson",
           batch_size=16, learning_rate=0.1, epochs=500):
     # target is initialized with content image
     style_name = os.path.splitext(os.path.basename(style))[0]
@@ -151,7 +150,6 @@ def train(style, contents, image_shape,
     saver = tf.train.Saver()
 
     cost = total_loss(content_input, style_input, target)
-    # use Adam algorithm to optimize the total cost
     train_op = tf.train.AdamOptimizer(learning_rate).minimize(cost)
 
     with tf.Session() as sess:
@@ -162,7 +160,6 @@ def train(style, contents, image_shape,
                 images = contents[batch * batch_size: (batch + 1) * batch_size]
                 _, loss = sess.run([train_op, cost],
                                    feed_dict={content_input: images})
-                print("iter:%d, batch:%d, loss:%.9f" % (i, batch, np.sum(loss)))
         saver.save(sess, '%s_%s.ckpt' % (generator_name, style_name))
 
 

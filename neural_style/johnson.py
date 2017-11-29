@@ -1,19 +1,19 @@
 import tensorflow as tf
 import tflearn
 
+relu = tf.nn.relu
+conv2d = tflearn.conv_2d
+
 
 def generator(input_image):
-    relu = tf.nn.relu
-    conv2d = tflearn.conv_2d
-
     def batch_norm(x):
         mean, var = tf.nn.moments(x, axes=[1, 2, 3])
         return tf.nn.batch_normalization(x, mean, var, 0, 1, 1e-5)
 
     def deconv2d(x, n_filter, ksize, strides=1):
         _, h, w, _ = x.get_shape().as_list()
-        output_shape = [strides * h, strides * w]
-        return tflearn.conv_2d_transpose(x, n_filter, ksize, output_shape,
+        out_shape = [strides * h, strides * w]
+        return tflearn.conv_2d_transpose(x, n_filter, ksize, out_shape,
                                          strides)
 
     def res_block(x):

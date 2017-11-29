@@ -1,12 +1,11 @@
 import tensorflow as tf
 import tflearn
+conv2d = tflearn.conv_2d
+batch_norm = tflearn.batch_normalization
+relu = tf.nn.relu
 
 
 def generator(input_image):
-    conv2d = tflearn.conv_2d
-    batch_norm = tflearn.batch_normalization
-    relu = tf.nn.relu
-
     ratios = [16, 8, 4, 2, 1]
     n_filter = 8
     net = []
@@ -29,9 +28,6 @@ def generator(input_image):
                 net[i] = relu(batch_norm(net[i]))
 
         if i != len(ratios) - 1:
-            # upsample for concat
             net[i] = tflearn.upsample_2d(net[i], 2)
 
-    nn = len(ratios) - 1
-    output = conv2d(net[nn], 3, 1)
-    return output
+    return conv2d(net[len(ratios) - 1], 3, 1)

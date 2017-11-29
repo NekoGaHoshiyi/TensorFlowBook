@@ -4,8 +4,8 @@ import random
 
 import numpy as np
 import tensorflow as tf
-from tensorflow.contrib.rnn.python.ops import core_rnn
-from tensorflow.contrib.rnn.python.ops import core_rnn_cell
+from tensorflow.python.ops import rnn
+from tensorflow.python.ops import rnn_cell
 
 
 def build_data(n):
@@ -26,25 +26,25 @@ def build_data(n):
     train_y = np.array(ys[0: 1500])
     test_x = np.array(xs[1500:])
     test_y = np.array(ys[1500:])
-    return (train_x, train_y, test_x, test_y)
+    return train_x, train_y, test_x, test_y
 
 
 length = 10
-time_step_size = length
-vector_size = 1
-batch_size = 10
-test_size = 10
 
 # build data
 (train_x, train_y, test_x, test_y) = build_data(length)
 print(train_x.shape, train_y.shape, test_x.shape, test_y.shape)
 
+time_step_size = length
+vector_size = 1
+batch_size = 10
+test_size = 10
+
 X = tf.placeholder("float", [None, length, vector_size])
 Y = tf.placeholder("float", [None, 1])
 
-# get lstm_size and output predicted value
-W = tf.Variable(tf.random_normal([10, 1], stddev=0.01))
-B = tf.Variable(tf.random_normal([1], stddev=0.01))
+W = tf.Variable(tf.random_normal([length, vector_size], stddev=0.01))
+B = tf.Variable(tf.random_normal([vector_size], stddev=0.01))
 
 
 def seq_predict_model(X, w, b, time_step_size, vector_size):
@@ -56,13 +56,12 @@ def seq_predict_model(X, w, b, time_step_size, vector_size):
     # split X, array[time_step_size], shape: [batch_size, vector_size]
     X = tf.split(X, time_step_size, 0)
 
-    cell = core_rnn_cell.BasicRNNCell(num_units=10)
+    cell = rnn_cell.BasicRNNCell(num_units=10)
     initial_state = tf.zeros([batch_size, cell.state_size])
-    outputs, _states = core_rnn.static_rnn(cell, X, initial_state=initial_state)
+    outputs, _states = rnn.static_rnn(cell, X, initial_state=initial_state)
 
     # Linear activation
     return tf.matmul(outputs[-1], w) + b, cell.state_size
-
 
 pred_y, _ = seq_predict_model(X, W, B, time_step_size, vector_size)
 loss = tf.square(tf.subtract(Y, pred_y))

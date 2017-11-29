@@ -4,8 +4,8 @@ import random
 
 import numpy as np
 import tensorflow as tf
-from tensorflow.contrib.rnn.python.ops import core_rnn
-from tensorflow.contrib.rnn.python.ops import core_rnn_cell
+from tensorflow.python.ops import rnn
+from tensorflow.python.ops import rnn_cell
 
 
 def build_data(n):
@@ -57,10 +57,10 @@ def seq_predict_model(X, w, b, time_step_size, vector_size):
     X = tf.split(X, time_step_size, 0)
 
     # LSTM model with state_size = 10
-    cell = core_rnn_cell.BasicLSTMCell(num_units=10,
+    cell = rnn_cell.BasicLSTMCell(num_units=10,
                                        forget_bias=1.0,
                                        state_is_tuple=True)
-    outputs, _states = core_rnn.static_rnn(cell, X, dtype=tf.float32)
+    outputs, _states = rnn.static_rnn(cell, X, dtype=tf.float32)
 
     # Linear activation
     return tf.matmul(outputs[-1], w) + b, cell.state_size

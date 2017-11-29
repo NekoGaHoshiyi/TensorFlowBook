@@ -23,15 +23,12 @@ _vgg_params = None
 
 def vgg_params():
     # Load pre-trained VGG19 params
+    # http://www.vlfeat.org/matconvnet/models/imagenet-vgg-verydeep-19.mat
     global _vgg_params
     if _vgg_params is None:
         file = 'imagenet-vgg-verydeep-19.mat'
         if os.path.isfile(file):
             _vgg_params = scipy.io.loadmat(file)
-        else:
-            sys.stderr.write('Please download imagenet-vgg-verydeep-19.mat from'
-                             ' http://www.vlfeat.org/matconvnet/models/imagenet-vgg-verydeep-19.mat\n')
-            sys.exit(1)
     return _vgg_params
 
 
